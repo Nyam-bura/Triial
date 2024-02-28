@@ -1,8 +1,16 @@
 from django.contrib import admin
 
-from samples.models import CustomerComplaints,ScheduledDirectors,MobileInformation
+from samples.models import CustomerComplaints,ScheduledDirectors,MobileInformation,AbstractModel
 
 # Register your models here.
+class AbstractModelAdmin(admin.ModelAdmin):
+    model = AbstractModel
+    list_display = ['row_id','psp_id','agent_id','reporting_date','gender']
+
+admin.site.register(AbstractModel,AbstractModelAdmin)
+
+
+
 class CustomerComplaintsAdmin(admin.ModelAdmin):
     model = CustomerComplaints
     list_display = ['complaint_code','frequency','complainant_name','complainant_age','complainant_contact_number','location','education_level','extra_details','date_of_occurence'
