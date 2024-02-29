@@ -5,7 +5,7 @@ from samples.models import CustomerComplaints,ScheduledDirectors,MobileInformati
 # Register your models here.
 class AbstractModelAdmin(admin.ModelAdmin):
     model = AbstractModel
-    list_display = ['row_id','psp_id','agent_id','reporting_date','gender']
+    list_display = ['row_id','psp_id','agent_id','reporting_date','gender','psp_customer_info']
 
 admin.site.register(AbstractModel,AbstractModelAdmin)
 
@@ -20,11 +20,9 @@ admin.site.register(CustomerComplaints,CustomerComplaintsAdmin)
 
 class ScheduledDirectorsAdmin(admin.ModelAdmin):
     model = ScheduledDirectors
-    list_display = [
-        'directors_name','type_of_director','date_of_birth','identification_documents','level_of_education',
+    list_display = ['directors_name','type_of_director','date_of_birth','identification_documents','level_of_education',
         'directorship_position','contact_number','appointment_date','retirement_date','data_transparency','start_date',
-        'end_date','pin'
-    ]
+        'end_date','pin']
 
 admin.site.register(ScheduledDirectors,ScheduledDirectorsAdmin)
 
