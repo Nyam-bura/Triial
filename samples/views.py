@@ -85,3 +85,10 @@ class MobileInformationApiView(generics.GenericAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+# from django.http import HttpResponse
+# from .models import CustomerComplaints
+# def index(request):
+#         context = {
+#                 'complainant_name':CustomerComplaints.objects.all()}
+#         return render(request,'samples/index.html',context)

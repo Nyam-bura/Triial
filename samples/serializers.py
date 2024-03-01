@@ -28,7 +28,7 @@ class MobileInformationSerializer(serializers.ModelSerializer):
 
 class AbstractSerializer(serializers.ModelSerializer):
     psp_customer_info = CustomerComplaintsSerializer(many=True)
-    agent_status = MobileInformationSerializer(many=True)
+    mobile_psp_info = MobileInformationSerializer(many=True)
 
 
     class Meta:
@@ -36,15 +36,15 @@ class AbstractSerializer(serializers.ModelSerializer):
         fields = ['row_id','reporting_date','gender','psp_customer_info','agent_status','complaints']
         
         def create(self, validated_data):
-            print(validated_data)
+            print(validated_data)                                                                                               
             try:
                 psp_customer_info = validated_data.pop('psp_customer_info')
                 psp_customer_info, did_create = ScheduledDirectors.objects.update_or_create(**psp_customer_info)
                 print('dnjdfdjfjjrf')
                 customer = AbstractModel.objects.update_or_create(psp_customer_info=psp_customer_info, **validated_data)
-                agent_status = validated_data.pop('agent_status')
-                for agent_status in agent_status:
-                    agent_status.objects.update_or_create(**agent_status)
+                mobile_psp_info = validated_data.pop('agent_status')
+                for mobile_psp_info in mobile_psp_info:
+                    mobile_psp_info.objects.update_or_create(**mobile_psp_info)
 
                     return customer
             except Exception as e:

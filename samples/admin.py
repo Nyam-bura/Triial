@@ -5,7 +5,7 @@ from samples.models import CustomerComplaints,ScheduledDirectors,MobileInformati
 # Register your models here.
 class AbstractModelAdmin(admin.ModelAdmin):
     model = AbstractModel
-    list_display = ['row_id','psp_id','agent_id','reporting_date','gender','psp_customer_info']
+    list_display = ['row_id','psp_id','agent_id','reporting_date','gender']
 
 admin.site.register(AbstractModel,AbstractModelAdmin)
 
@@ -14,7 +14,7 @@ admin.site.register(AbstractModel,AbstractModelAdmin)
 class CustomerComplaintsAdmin(admin.ModelAdmin):
     model = CustomerComplaints
     list_display = ['complaint_code','frequency','complainant_name','complainant_age','complainant_contact_number','location','education_level','extra_details','date_of_occurence'
-                    ,'date_resolved','status','amount','currency']
+                    ,'date_resolved','status','amount','currency','psp_customer_info']
 admin.site.register(CustomerComplaints,CustomerComplaintsAdmin)
 
 
@@ -29,7 +29,7 @@ admin.site.register(ScheduledDirectors,ScheduledDirectorsAdmin)
 
 class MobileInformationAdmin(admin.ModelAdmin):
     model = MobileInformation
-    list_display = ['favorite_cell','sub_county_code','agent_type_code','agent_status','band_code','cash_in_volume','value_cash_in','cash_out_volume','value_cash_out','float_amount',
+    list_display = ['favorite_cell','sub_county_code','agent_type_code','agent_status','band_code','cash_in_volume','mobile_psp_info','value_cash_in','cash_out_volume','value_cash_out','float_amount',
                     'agent_cash_deposits','agent_cash_deposits_bank','agent_cash_withdrawal_bank','value_agent_cash_withdrawal_bank']
-
-admin.site.register(MobileInformation,MobileInformationAdmin)    
+    
+admin.site.register(MobileInformation,MobileInformationAdmin)

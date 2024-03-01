@@ -41,10 +41,17 @@ STATUS_CHOICES = (
     ("C", "Complete"),
 )
 
+class AbstractModel(models.Model):
+    row_id = models.IntegerField(_("row_id"), blank=False, null=True,default=1)
+    psp_id = models.CharField(_("psp_id"), blank=False, null=True, max_length=10,default=1)
+    agent_id = models.CharField(_("agent_id"), blank=False, null=True, max_length=10, unique=True)
+    reporting_date = models.DateField(_("reporting_date"), blank=False, null=False)
+    gender = models.CharField(_("gender"), blank=False, null=False, max_length=5, choices=GENDER_CHOICES)
+    complaints = models.CharField(_('complaints'),max_length=250,blank=False,null=False,default=1)
 
 class CustomerComplaints(models.Model):
-    reporting_date = models.DateTimeField(_("reporting_date"), blank=False, null=False)
-    complaint_code = models.CharField(_("complaint_code"), blank=False, null=False, max_length=7)
+    reporting_date = models.DateField(_("reporting_date"), blank=False, null=False)
+    complaint_code = models.CharField(_("complaint_code"), blank=False, null=True, max_length=7)
     frequency = models.CharField(_("frequency"), blank=False, null=False, max_length=10)
     complainant_name = models.CharField(_("complainant_name"), blank=False, null=False, max_length=25)
     complainant_age = models.PositiveSmallIntegerField(_("complainant_age"))
@@ -57,6 +64,7 @@ class CustomerComplaints(models.Model):
     status = models.CharField(_("status"), blank=False, null=True, max_length=15, choices=STATUS_CHOICES)
     amount = models.BigIntegerField(_("amount"), blank=False, null=False, default="0")
     currency = models.CharField(_("currency"), max_length=1, choices=CURRENCY_CHOICES, default="0")
+    psp_customer_info = models.ForeignKey(AbstractModel,on_delete=models.CASCADE,default=1)
 
     @property
     def amount_in_ksh(self):
@@ -69,14 +77,34 @@ class CustomerComplaints(models.Model):
         if conversion_rate is not None:
             return self.amount * conversion_rate
         else:
-            raise ValueError("Invalid currency specified")
+            raise ValueError("Invalid Currency Specified")
 
     def __str__(self):
         return f"{self.amount} {self.currency}"
 
 
+
+AGENT_STATUS_CHOICES = (("A", "Active"), ("D", "Dormant"))
+
+class MobileInformation(models.Model):
+    favorite_cell = models.CharField(_("favorite_cell"), blank=False, null=False, max_length=10)
+    sub_county_code = models.CharField(_("sub_county_code"), blank=False, null=False, max_length=3)
+    agent_type_code = models.CharField(_("agent_type_code"), blank=False, null=False, max_length=10)
+    agent_status = models.CharField(_("agent_status"), blank=False, null=False, max_length=25, choices=AGENT_STATUS_CHOICES)
+    band_code = models.CharField(_("band_code"), blank=False, null=False, max_length=25)
+    mobile_psp_info=models.ForeignKey(AbstractModel,on_delete=models.CASCADE,default=1)
+    cash_in_volume = models.DecimalField(_("cash_volume"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    value_cash_in = models.DecimalField(_("value_cash_in"), blank=False, null=False, decimal_places=2, max_digits=10, default=0)
+    cash_out_volume = models.DecimalField(_("cash_out_volume"), blank=False, null=False, default=0, decimal_places=2, max_digits=10)
+    value_cash_out = models.DecimalField(_("value_cash_out"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    float_amount = models.DecimalField(_("float_amount"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    agent_cash_deposits = models.DecimalField(_("agent_cash_deposits"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    agent_cash_deposits_bank = models.DecimalField(_("agent_cash_deposits_bank"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    agent_cash_withdrawal_bank = models.DecimalField(_("agent_cash_withdrawal_bank"), decimal_places=2, blank=False, null=False, default=0, max_digits=10)
+    value_agent_cash_withdrawal_bank = models.DecimalField(_("value_agent_cash_withdrawal_bank"), max_digits=10, decimal_places=2, blank=False, null=False, default=0)
+
 class ScheduledDirectors(models.Model):
-    complaints = models.ForeignKey(CustomerComplaints, verbose_name=_("customer"), on_delete=models.CASCADE )
+    complaints = models.ForeignKey(CustomerComplaints, verbose_name=_("customer"), on_delete=models.CASCADE)
     directors_name = models.CharField(_("directors_name"), blank=False, null=False, max_length=255)
     type_of_director = models.CharField(_("type_of_director"), blank=False, null=False, max_length=10, choices=EXECUTIVE_CHOICES)
     date_of_birth = models.DateField(_("date_of_birth"), blank=False, null=False)
@@ -95,31 +123,37 @@ class ScheduledDirectors(models.Model):
         unique_together = [["pin", "identification_documents"]]
 
 
-AGENT_STATUS_CHOICES = (("A", "Active"), ("D", "Dormant"))
 
 
-class AbstractModel(models.Model):
-    psp_customer_info = models.ForeignKey(ScheduledDirectors, on_delete=models.CASCADE, related_name='psp_customer_info',default=1)
-    row_id = models.IntegerField(_("row_id"), blank=False, null=True)
-    psp_id = models.CharField(_("psp_id"), blank=False, null=True, max_length=10)
-    agent_id = models.CharField(_("agent_id"), blank=False, null=True, max_length=10, unique=True)
-    reporting_date = models.DateTimeField(_("reporting_date"), blank=False, null=False)
-    gender = models.CharField(_("gender"), blank=False, null=False, max_length=5, choices=GENDER_CHOICES)
-    complaints = models.CharField(_('complaints'),max_length=250,blank=False,null=False,default=1)
 
 
-class MobileInformation(models.Model):
-    favorite_cell = models.CharField(_("favorite_cell"), blank=False, null=False, max_length=10)
-    sub_county_code = models.CharField(_("sub_county_code"), blank=False, null=False, max_length=3)
-    agent_type_code = models.CharField(_("agent_type_code"), blank=False, null=False, max_length=10)
-    agent_status = models.CharField(_("agent_status"), blank=False, null=False, max_length=25, choices=AGENT_STATUS_CHOICES)
-    band_code = models.CharField(_("band_code"), blank=False, null=False, max_length=25)
-    cash_in_volume = models.DecimalField(_("cash_volume"), blank=False, null=False, default=0, max_digits=5, decimal_places=2)
-    value_cash_in = models.DecimalField(_("value_cash_in"), blank=False, null=False, decimal_places=2, max_digits=5, default=0)
-    cash_out_volume = models.DecimalField(_("cash_out_volume"), blank=False, null=False, default=0, decimal_places=2, max_digits=5)
-    value_cash_out = models.DecimalField(_("value_cash_out"), blank=False, null=False, default=0, max_digits=5, decimal_places=2)
-    float_amount = models.DecimalField(_("float_amount"), blank=False, null=False, default=0, max_digits=5, decimal_places=2)
-    agent_cash_deposits = models.DecimalField(_("agent_cash_deposits"), blank=False, null=False, default=0, max_digits=5, decimal_places=2)
-    agent_cash_deposits_bank = models.DecimalField(_("agent_cash_deposits_bank"), blank=False, null=False, default=0, max_digits=5, decimal_places=2)
-    agent_cash_withdrawal_bank = models.DecimalField(_("agent_cash_withdrawal_bank"), decimal_places=2, blank=False, null=False, default=0, max_digits=5)
-    value_agent_cash_withdrawal_bank = models.DecimalField(_("value_agent_cash_withdrawal_bank"), max_digits=5, decimal_places=2, blank=False, null=False, default=0)
+
+
+
+
+
+
+
+
+
+# from datetime import datetime
+# from your_app.models import CustomerComplaints
+
+# customer1 = CustomerComplaints(
+#     reporting_date=datetime(2002, 2, 20),
+#     complaint_code="CB02",
+#     frequency="2",
+#     complainant_name="Janet",
+#     complainant_age=22,
+#     complainant_contact_number="01134533190",
+#     location="Nairobi",
+#     education_level="U",
+#     extra_details="She is a genius",
+#     date_of_occurrence=datetime(2024, 3, 1),
+#     date_resolved=datetime(2024, 3, 2),
+#     status="P",
+#     amount=100,
+#     currency="Ksh",
+#     psp_customer_info=1
+# )
+# customer1.save()
