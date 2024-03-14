@@ -53,8 +53,6 @@ class AbstractModel(models.Model):
     class Meta:
         unique_together = ['row_id','psp_id','gender','reporting_date']
 
-    
-
 class CustomerComplaints(models.Model):
     reporting_date = models.DateField(_("reporting_date"), blank=False, null=False)
     complaint_code = models.CharField(_("complaint_code"), blank=False, null=True, max_length=7)
@@ -128,25 +126,5 @@ class ScheduledDirectors(models.Model):
 
     class Meta:
         unique_together = [["pin","identification_documents"]]
-
-# from datetime import datetime
-# from your_app.models import CustomerComplaints
-
-# customer1 = CustomerComplaints(
-#     reporting_date=datetime(2002, 2, 20),
-#     complaint_code="CB02",
-#     frequency="2",
-#     complainant_name="Janet",
-#     complainant_age=22,
-#     complainant_contact_number="01134533190",
-#     location="Nairobi",
-#     education_level="U",
-#     extra_details="She is a genius",
-#     date_of_occurrence=datetime(2024, 3, 1),
-#     date_resolved=datetime(2024, 3, 2),
-#     status="P",
-#     amount=100,
-#     currency="Ksh",
-#     psp_customer_info=1
-# )
-# customer1.save()
+        
+# P051302692C

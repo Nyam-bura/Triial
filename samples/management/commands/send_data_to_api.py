@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from samples.models import AbstractModel, CustomerComplaints
+from samples.models import AbstractModel, ScheduledDirectors
 import csv
 import requests
 from io import StringIO
@@ -11,7 +11,7 @@ class Command(BaseCommand):
         url = 'https://eobjk3bc0hu19p1.m.pipedream.net'
 
         csv_data = StringIO()
-        data_list = CustomerComplaints.objects.all().values()  
+        data_list = ScheduledDirectors.objects.all().values()  
         csv_writer = csv.DictWriter(csv_data, fieldnames=data_list[0].keys())
         csv_writer.writeheader()        
         csv_writer.writerows(data_list)

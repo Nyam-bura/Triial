@@ -40,11 +40,12 @@ INSTALLED_APPS = [
     'django',
     'samples',
     'rest_framework',
+    'rest_framework_swagger',
     'drf_yasg',
     'drf_queryfields',
     'django_celery_results',
     'django_celery_beat',
-
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'Test.urls'
@@ -77,7 +80,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Test.wsgi.application'
 
-
+REST_FRAMEWORK = {
+   'DEFAULT_AUTHENTICATION_CLASSES': (
+       'rest_framework.authentication.TokenAuthentication',
+       
+   ),
+}
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -144,3 +152,15 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
+
+CORS_ALLOWED_ORIGINS = [
+"http://localhost:8000",
+]
+
+CORS_ALLOW_METHODS = [
+'DELETE',
+'GET',
+'PATCH',
+'POST',
+'PUT',
+]
