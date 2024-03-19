@@ -53,6 +53,27 @@ class AbstractModel(models.Model):
     class Meta:
         unique_together = ['row_id','psp_id','gender','reporting_date']
 
+
+AGENT_STATUS_CHOICES = (("A", "Active"), ("D", "Dormant"))
+
+class MobileInformation(models.Model):
+    favorite_cell = models.CharField(_("favorite_cell"), blank=False, null=False, max_length=10)
+    sub_county_code = models.CharField(_("sub_county_code"), blank=False, null=False, max_length=3)
+    agent_type_code = models.CharField(_("agent_type_code"), blank=False, null=False, max_length=10)
+    psp_customer_info = models.CharField(_("psp_customer_info"),max_length=255,blank=False,null=True)
+    agent_status = models.CharField(_("agent_status"), blank=False, null=False, max_length=25, choices=AGENT_STATUS_CHOICES)
+    band_code = models.CharField(_("band_code"), blank=False, null=False, max_length=25)
+    cash_in_volume = models.DecimalField(_("cash_volume"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    value_cash_in = models.DecimalField(_("value_cash_in"), blank=False, null=False, decimal_places=2, max_digits=10, default=0)
+    cash_out_volume = models.DecimalField(_("cash_out_volume"), blank=False, null=False, default=0, decimal_places=2, max_digits=10)
+    value_cash_out = models.DecimalField(_("value_cash_out"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    float_amount = models.DecimalField(_("float_amount"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    agent_cash_deposits = models.DecimalField(_("agent_cash_deposits"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    agent_cash_deposits_bank = models.DecimalField(_("agent_cash_deposits_bank"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
+    agent_cash_withdrawal_bank = models.DecimalField(_("agent_cash_withdrawal_bank"), decimal_places=2, blank=False, null=False, default=0, max_digits=10)
+    value_agent_cash_withdrawal_bank = models.DecimalField(_("value_agent_cash_withdrawal_bank"), max_digits=10, decimal_places=2, blank=False, null=False, default=0)
+
+
 class CustomerComplaints(models.Model):
     reporting_date = models.DateField(_("reporting_date"), blank=False, null=False)
     complaint_code = models.CharField(_("complaint_code"), blank=False, null=True, max_length=7)
@@ -68,7 +89,7 @@ class CustomerComplaints(models.Model):
     status = models.CharField(_("status"), blank=False, null=True, max_length=15, choices=STATUS_CHOICES)
     amount = models.BigIntegerField(_("amount"), blank=False, null=False, default="0")
     currency = models.CharField(_("currency"), max_length=1, choices=CURRENCY_CHOICES, default="0")
-    psp_customer_info = models.ForeignKey(AbstractModel,on_delete=models.CASCADE,null=True)
+    psp_customer_info = models.ForeignKey(MobileInformation,on_delete=models.CASCADE,null=True,related_name='mobile')
 
     @property
     def amount_in_ksh(self):
@@ -82,31 +103,10 @@ class CustomerComplaints(models.Model):
             return self.amount * conversion_rate
         else:
 
-            raise ValueError("Invalid Currency Specified")
+            raise ValueError("Invalid Specified Currency")
 
     def __str__(self):
         return f"{self.amount} {self.currency}"
-
-
-
-AGENT_STATUS_CHOICES = (("A", "Active"), ("D", "Dormant"))
-
-class MobileInformation(models.Model):
-    favorite_cell = models.CharField(_("favorite_cell"), blank=False, null=False, max_length=10)
-    sub_county_code = models.CharField(_("sub_county_code"), blank=False, null=False, max_length=3)
-    agent_type_code = models.CharField(_("agent_type_code"), blank=False, null=False, max_length=10)
-    agent_status = models.CharField(_("agent_status"), blank=False, null=False, max_length=25, choices=AGENT_STATUS_CHOICES)
-    band_code = models.CharField(_("band_code"), blank=False, null=False, max_length=25)
-    psp_customer_info = models.ForeignKey(AbstractModel, on_delete=models.CASCADE,null=True)
-    cash_in_volume = models.DecimalField(_("cash_volume"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
-    value_cash_in = models.DecimalField(_("value_cash_in"), blank=False, null=False, decimal_places=2, max_digits=10, default=0)
-    cash_out_volume = models.DecimalField(_("cash_out_volume"), blank=False, null=False, default=0, decimal_places=2, max_digits=10)
-    value_cash_out = models.DecimalField(_("value_cash_out"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
-    float_amount = models.DecimalField(_("float_amount"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
-    agent_cash_deposits = models.DecimalField(_("agent_cash_deposits"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
-    agent_cash_deposits_bank = models.DecimalField(_("agent_cash_deposits_bank"), blank=False, null=False, default=0, max_digits=10, decimal_places=2)
-    agent_cash_withdrawal_bank = models.DecimalField(_("agent_cash_withdrawal_bank"), decimal_places=2, blank=False, null=False, default=0, max_digits=10)
-    value_agent_cash_withdrawal_bank = models.DecimalField(_("value_agent_cash_withdrawal_bank"), max_digits=10, decimal_places=2, blank=False, null=False, default=0)
 
 class ScheduledDirectors(models.Model):
     psp_customer_info = models.ForeignKey(AbstractModel, on_delete=models.CASCADE,null=True)
@@ -118,7 +118,7 @@ class ScheduledDirectors(models.Model):
     directorship_position = models.CharField(_("directorship_position"),blank=False,null=False,max_length=255)
     contact_number = models.CharField(_("contact_number"),blank=False,null=False,max_length=20)
     appointment_date = models.DateField(_("appointment_date"),blank=False,null=False) 
-    data_transparency= models.CharField(_("data_transparency"),blank=False,null=False,max_length=255)
+    data_transparency= models.CharField(_("date_transparency"),blank=False,null=False,max_length=255)
     retirement_date = models.DateField(_("retirement_date"),blank=False,null=False,max_length=255)
     start_date = models.DateField(_("start_date"),blank=False,null=False,auto_now=False)
     end_date = models.DateField(_("end_date"),blank=False,null=False)
@@ -126,5 +126,6 @@ class ScheduledDirectors(models.Model):
 
     class Meta:
         unique_together = [["pin","identification_documents"]]
+        ordering = ['pin','identification_documents']
         
 # P051302692C

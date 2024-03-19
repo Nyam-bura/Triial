@@ -21,6 +21,6 @@ class Command(BaseCommand):
         response = requests.post(url, data=csv_data)
 
         if response.status_code == 200:
-            self.stdout.write(self.style.SUCCESS(f'Data successfully sent to the API'))
+            self.stdout.write(self.style.SUCCESS(f'Data Successfully sent to the API'))
         else:
             self.stdout.write(self.style.ERROR(f'Failed to send data to API'))

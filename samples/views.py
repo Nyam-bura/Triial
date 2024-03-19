@@ -2,11 +2,10 @@ from django.shortcuts import render
 from samples.serializers import CustomerComplaintsSerializer,ScheduledDirectorsSerializer,MobileInformationSerializer
 from .models import CustomerComplaints,ScheduledDirectors,MobileInformation
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin,UpdateModelMixin, DestroyModelMixin
+from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 
 class CustomerComplaintsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -49,7 +48,7 @@ class ScheduledDirectorsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ScheduledDirectorsSerializer
 
 
-@api_view(['GET', 'PUT','PATCH', 'DELETE'])
+@api_view(['GET','PUT','PATCH','DELETE'])
 def director_details(request, id):
     try:
         ScheduledDirectors_instance = ScheduledDirectors.objects.get(pk=id)
@@ -82,12 +81,12 @@ def director_details(request, id):
 class MobileInformationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = MobileInformation.objects.all()
     serializer_class = MobileInformationSerializer
- 
     
-@api_view(['GET', 'PUT','PATCH', 'DELETE'])
+
+@api_view(['GET','PUT','PATCH','DELETE'])
 def mobile_details(request, id):
     try:
-        MobileInformation_instance = MobileInformation.objects.get(pk=id)
+        MobileInformation_instance=MobileInformation.objects.get(pk=id)
     except MobileInformation.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -96,7 +95,7 @@ def mobile_details(request, id):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = MobileInformationSerializer(MobileInformation_instance, data=request.data)
+        serializer = MobileInformationSerializer(MobileInformation_instance,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
