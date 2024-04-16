@@ -21,7 +21,7 @@ app.autodiscover_tasks()
 def setup_periodic_tasks(sender, **kwargs):
 
     sender.add_periodic_task(
-        crontab(hour=7, minute=10),
+        crontab(hour=7, minute=35),
     )
 
 @app.task

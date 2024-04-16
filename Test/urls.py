@@ -26,7 +26,7 @@ MODE = 'DEV'
 class CustomOpenAPISchemaGenerator(OpenAPISchemaGenerator):
     def get_schema(self, *args, **kwargs):
         schema = super().get_schema(*args, **kwargs)
-        schema.basePath = '/samples/'
+        schema.basePath = '/Samples/'
         return schema
 GENERATOR_CLASS = CustomOpenAPISchemaGenerator
 
@@ -46,7 +46,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('samples/',include('samples.urls')),
+    path('Samples/',include('Samples.urls')),
     path('', schema_view.with_ui('swagger', cache_timeout=0),name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc',cache_timeout=0), name='schema-redoc'),
     ]

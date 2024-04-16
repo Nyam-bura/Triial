@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django',
-    'samples',
+    'Samples',
     'rest_framework',
     'rest_framework_swagger',
     'drf_yasg',
@@ -57,7 +57,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-
 ]
 
 ROOT_URLCONF = 'Test.urls'
@@ -99,11 +98,11 @@ WSGI_APPLICATION = 'Test.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'railway',
-        'USER':'postgres',
-        'PASSWORD':'d6g15eBB55DDFg6B6Abg*Gfafed*gC*5',
-        'HOST':'roundhouse.proxy.rlwy.net',
-        'PORT':'25625',
+        'NAME': 'CbkTrials',
+        'USER':'postgres',                                                                          
+        'PASSWORD':'postgres',
+        'HOST':'localhost',
+        'PORT':'5432',
     }
 }
 
